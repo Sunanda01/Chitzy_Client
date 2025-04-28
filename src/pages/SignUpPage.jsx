@@ -44,7 +44,7 @@ function SignUpPage() {
           {/* LOGO */}
           <div className="text-center mb-2">
             <div className="flex flex-col items-center gap-2 group">
-              <h1 className="text-2xl font-bold mt-2">Create Account</h1>
+              <h1 className="text-2xl font-bold mt-5">Create Account</h1>
               <p className="text-base-content/60">
                 Get started with your free account
               </p>
@@ -56,26 +56,19 @@ function SignUpPage() {
               <div className="flex flex-col items-center justify-center mt-3">
                 <label
                   htmlFor="profileImageUpload"
-                  className="relative flex items-center justify-center w-24 h-24 rounded-full  cursor-pointer overflow-hidden group transition-all"
+                  className="relative flex items-center justify-center w-24 h-24 rounded-full border-5 border-white cursor-pointer overflow-hidden group transition-all"
                 >
                   {isUploading ? (
                     <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-                  ) : formData.profilePic ? (
+                  ) : (
                     <img
-                      src={formData.profilePic}
+                      src={formData.profilePic || "/avatar.png"}
                       alt="Profile"
                       className="object-cover w-full h-full transition-all"
                     />
-                  ) : (
-                    <img
-                      src="/avatar.png"
-                      alt="Default"
-                      className="object-cover w-full h-full transition-all"
-                    />
                   )}
-                  {/* (optional) hover edit icon */}
                   {formData.profilePic && (
-                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-70 transition">
                       <span className="text-white text-xs font-semibold">
                         Change
                       </span>
@@ -89,13 +82,11 @@ function SignUpPage() {
                     accept="image/*"
                     disabled={isUploading}
                   />
-                  
                 </label>
               </div>
-              <p className="text-sm text-zinc-400 flex items-center justify-center mt-2">
-              {isUploading ? "Uploading..." : "Click the camera icon to update your photo"}
-            </p>
-              
+              <p className="text-sm text-zinc-400 flex items-center justify-center mt-4">
+                {isUploading ? "Uploading..." : "Upload Your Photo"}
+              </p>
             </div>
 
             <div className="form-control">
