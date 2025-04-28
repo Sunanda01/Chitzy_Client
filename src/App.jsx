@@ -9,19 +9,22 @@ import ProfilePage from "./pages/ProfilePage";
 import ErrorPage from "./pages/ErrorPage";
 import { useAuthStore } from "./store/useAuthStore";
 import { useEffect } from "react";
+import { setupInterceptors } from "./services/axiosInstance";
 
 function App() {
-  const { authUser, isCheckingAuth, checkAuth } = useAuthStore();
+  const { authUser } = useAuthStore();
+  console.log('authUser',authUser);
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
-  if (isCheckingAuth && !authUser)
-    return (
-      <div className="flex justify-center ">
-        <span className="loading loading-ring loading-3xl"></span>
-        <span>LOADING........................</span>
-      </div>
-    );
+    setupInterceptors();
+    // checkAuth();
+  }, []);
+  // if (isCheckingAuth)
+  //   return (
+  //     <div className="flex justify-center ">
+  //       <span className="loading loading-ring loading-3xl"></span>
+  //       <span>LOADING........................</span>
+  //     </div>
+  //   );
   return (
     <>
       <Navbar />
