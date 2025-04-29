@@ -10,9 +10,11 @@ import ErrorPage from "./pages/ErrorPage";
 import { useAuthStore } from "./store/useAuthStore";
 import { useEffect } from "react";
 import { setupInterceptors } from "./services/axiosInstance";
+import { useThemeStore } from "./store/useThemeStore";
 
 function App() {
   const { authUser } = useAuthStore();
+  const {theme}=useThemeStore();
   console.log('authUser',authUser);
   useEffect(() => {
     setupInterceptors();
@@ -26,7 +28,7 @@ function App() {
   //     </div>
   //   );
   return (
-    <>
+    <div data-theme={theme}>
       <Navbar />
       <Routes>
         <Route
@@ -48,7 +50,7 @@ function App() {
         />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
-    </>
+    </div>
   );
 }
 
