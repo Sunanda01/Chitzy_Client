@@ -13,6 +13,7 @@ export const useAuthStore = create((set) => ({
   accessToken: getUserFromLocalstorage
     ? getUserFromLocalstorage.accessToken
     : null,
+    onlineUsers:[],
 
   // checkAuth: async () => {
   //   try {
