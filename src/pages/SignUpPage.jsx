@@ -4,6 +4,7 @@ import { Camera, Eye, EyeOff, Loader2, Lock, Mail, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import AuthImagePattern from "../components/AuthImagePattern";
 import { uploadToCloudinary } from "../services/cloudinary";
+import toast from "react-hot-toast";
 const initialState = {
   fullName: "",
   email: "",
@@ -31,7 +32,7 @@ function SignUpPage() {
         profilePic: url,
       }));
     } catch (err) {
-      console.log(err);
+      toast.error("Failed to Upload image");
     } finally {
       setIsUploading(false);
     }

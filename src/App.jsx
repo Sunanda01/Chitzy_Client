@@ -13,20 +13,23 @@ import { setupInterceptors } from "./services/axiosInstance";
 import { useThemeStore } from "./store/useThemeStore";
 
 function App() {
-  const { authUser } = useAuthStore();
-  const {theme}=useThemeStore();
-  console.log('authUser',authUser);
+  const { authUser, checkAuth, isCheckingAuth, accessToken } = useAuthStore();
+  const { theme } = useThemeStore();
   useEffect(() => {
-    setupInterceptors();
-    // checkAuth();
+    checkAuth();
   }, []);
-  // if (isCheckingAuth)
-  //   return (
-  //     <div className="flex justify-center ">
-  //       <span className="loading loading-ring loading-3xl"></span>
-  //       <span>LOADING........................</span>
-  //     </div>
-  //   );
+  useEffect(() => {
+    if (accessToken) {
+      setupInterceptors();
+    }
+  }, [accessToken]);
+  if (isCheckingAuth)
+    return (
+      <div className="flex justify-center ">
+        <span className="loading loading-ring loading-3xl"></span>
+        <span>LOADING........................</span>
+      </div>
+    );
   return (
     <div data-theme={theme}>
       <Navbar />

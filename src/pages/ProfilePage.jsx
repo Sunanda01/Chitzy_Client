@@ -2,6 +2,7 @@ import { Camera, Mail, User } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useEffect, useState } from "react";
 import { uploadToCloudinary } from "../services/cloudinary";
+import toast from "react-hot-toast";
 
 function ProfilePage() {
   const { authUser, isUpdatingProfile, updateProfileDetails } = useAuthStore();
@@ -29,7 +30,8 @@ function ProfilePage() {
         profilePic: url,
       }));
     } catch (err) {
-      console.log(err);
+      toast.error("Failed to Upload image");
+      console.log;
     } finally {
       setIsUploading(false);
     }

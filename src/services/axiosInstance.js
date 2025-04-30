@@ -2,13 +2,11 @@ import axios from "axios";
 import { useAuthStore } from "../store/useAuthStore";
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
-  withCredentials:true
+  withCredentials: true,
 });
 axiosInstance.interceptors.request.use(
   (config) => {
     const { accessToken } = useAuthStore.getState();
-    console.log(useAuthStore.getState());
-    console.log(accessToken);
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }

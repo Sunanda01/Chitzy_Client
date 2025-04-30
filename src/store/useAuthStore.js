@@ -2,9 +2,10 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 import { axiosInstance } from "../services/axiosInstance";
+import { io } from "socket.io-client";
 const getUserFromLocalstorage =
   JSON.parse(localStorage.getItem("Chitzy_userDetails")) || null;
-export const useAuthStore = create((set) => ({
+export const useAuthStore = create((set, get) => ({
   authUser: getUserFromLocalstorage || null,
   isSigningUp: false,
   isLoggingIn: false,
@@ -13,24 +14,27 @@ export const useAuthStore = create((set) => ({
   accessToken: getUserFromLocalstorage
     ? getUserFromLocalstorage.accessToken
     : null,
-    onlineUsers:[],
+  onlineUsers: [],
+  socket: null,
 
-  // checkAuth: async () => {
-  //   try {
-  //     const res = await axiosInstance.get(`/auth/check-auth`);
-  //     console.log("checkAuth Success:", res);
-  //     set({
-  //       authUser: res.data.user,
-  //       accessToken: res.data.user.accessToken || null,
-  //     });
-  //   } catch (err) {
-  //     console.error("checkAuth Failed:", err);
-  //     set({ authUser: null, accessToken: null });
-  //     localStorage.removeItem("Chitzy_userDetails"); // optional
-  //   } finally {
-  //     set({ isCheckingAuth: false });
-  //   }
-  // },
+  checkAuth: async () => {
+    try {
+      const res = await axiosInstance.get(
+        `${import.meta.env.VITE_BACKEND_URL}/auth/check-auth`
+      );
+      const userDetails = JSON.parse(
+        localStorage.getItem("Chitzy_userDetails")
+      );
+      set({ authUser: userDetails, accessToken: userDetails.accessToken });
+      get().connectSocket();
+    } catch (err) {
+      localStorage.removeItem("Chitzy_userDetails");
+      set({ authUser: null, accessToken: null });
+      console.error("checkAuth Failed:", err);
+    } finally {
+      set({ isCheckingAuth: false });
+    }
+  },
 
   signup: async (data) => {
     try {
@@ -42,12 +46,11 @@ export const useAuthStore = create((set) => ({
           withCredentials: true,
         }
       );
-      localStorage.setItem("Chitzy_userDetails", JSON.stringify(res.data.user));
-      const userDetails = JSON.parse(
-        localStorage.getItem("Chitzy_userDetails")
-      );
+      const userDetails = res.data.user;
+      localStorage.setItem("Chitzy_userDetails", JSON.stringify(userDetails));
       set({ authUser: userDetails, accessToken: userDetails.accessToken });
       toast.success(res.data.msg);
+      get().connectSocket();
     } catch (err) {
       toast.error(err.response?.data?.msg);
     } finally {
@@ -65,14 +68,11 @@ export const useAuthStore = create((set) => ({
           withCredentials: true,
         }
       );
-      console.log(res);
-      localStorage.setItem("Chitzy_userDetails", JSON.stringify(res.data.user));
-      const userDetails = JSON.parse(
-        localStorage.getItem("Chitzy_userDetails")
-      );
+      const userDetails = res.data.user;
+      localStorage.setItem("Chitzy_userDetails", JSON.stringify(userDetails));
       set({ authUser: userDetails, accessToken: userDetails.accessToken });
-      set({});
       toast.success(res.data.msg);
+      get().connectSocket();
     } catch (err) {
       toast.error(err.response?.data?.msg);
     } finally {
@@ -85,10 +85,17 @@ export const useAuthStore = create((set) => ({
       const res = await axiosInstance.post(
         `${import.meta.env.VITE_BACKEND_URL}/auth/logout`
       );
-      set({ authUser: null, accessToken: null });
-      set({});
+      const socket = get().socket;
+      if (socket) socket.disconnect();
+      set({
+        authUser: null,
+        accessToken: null,
+        onlineUsers: [],
+        socket: null,
+      });
       localStorage.removeItem("Chitzy_userDetails");
       toast.success(res.data.msg);
+      get().disconnectSocket();
     } catch (err) {
       console.error(err);
       toast.error(err.response?.data?.msg);
@@ -102,7 +109,6 @@ export const useAuthStore = create((set) => ({
         `${import.meta.env.VITE_BACKEND_URL}/auth/update`,
         data
       );
-      console.log(res);
       const existingUserDetails = JSON.parse(
         localStorage.getItem("Chitzy_userDetails")
       );
@@ -125,5 +131,23 @@ export const useAuthStore = create((set) => ({
     } finally {
       set({ isUpdatingProfile: false });
     }
+  },
+  connectSocket: () => {
+    const { authUser } = get();
+    if (!authUser || get().socket?.connected) return;
+    const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, {
+      query: {
+        userId: authUser.id,
+      },
+    });
+
+    socket.connect();
+    set({ socket: socket });
+    socket.on("getOnlineUsers", (userIds) => {
+      set({ onlineUsers: userIds });
+    });
+  },
+  disconnectSocket: () => {
+    if (get().socket?.connected) get().socket.disconnect();
   },
 }));

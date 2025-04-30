@@ -1,11 +1,10 @@
 import React from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
-import { LogOut, MessageSquare, Settings, User } from "lucide-react";
+import { LogOut, Settings, User } from "lucide-react";
 
 function Navbar() {
   const { logout, authUser } = useAuthStore();
-  console.log('Auth',authUser)
   return (
     <header
       className=" border-b border-base-300 fixed w-full top-0 z-40 
@@ -19,7 +18,10 @@ function Navbar() {
               className="flex items-center gap-2.5 hover:opacity-80 transition-all"
             >
               <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                <img src="/Chitzy.svg" className="size-7 rounded text-primary" />
+                <img
+                  src="/Chitzy.svg"
+                  className="size-7 rounded text-primary"
+                />
               </div>
               <h1 className="text-lg font-bold">Chitzy</h1>
             </Link>
