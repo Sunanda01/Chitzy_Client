@@ -19,7 +19,7 @@ export const useAuthStore = create((set, get) => ({
 
   checkAuth: async () => {
     try {
-      const res = await axiosInstance.get(
+      await axiosInstance.get(
         `${import.meta.env.VITE_BACKEND_URL}/auth/check-auth`
       );
       const userDetails = JSON.parse(
@@ -30,7 +30,6 @@ export const useAuthStore = create((set, get) => ({
     } catch (err) {
       localStorage.removeItem("Chitzy_userDetails");
       set({ authUser: null, accessToken: null });
-      console.error("checkAuth Failed:", err);
     } finally {
       set({ isCheckingAuth: false });
     }
