@@ -39,7 +39,7 @@ If you are developing a production application, we recommend using TypeScript wi
       <td >Online User<br/> <img src="./screenshots/onlineUser.png" alt="Online User Page" /></td>
   </tr>
    <tr>
-    <td >Update Profile<br/> <img src="./screenshots/theme.png" alt="Update Profile" /></td>
+    <td >Update Profile<br/> <img src="./screenshots/update.png" alt="Update Profile" /></td>
      <td >Theme Setting<br/> <img src="./screenshots/theme.png" alt="Theme Setting" /></td>
   </tr>
 </table>
