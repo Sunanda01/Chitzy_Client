@@ -32,7 +32,7 @@ If you are developing a production application, we recommend using TypeScript wi
 ## Quick Glimpses 
 <table>
   <tr>
-    <td>Register Page<br><img src="./screenshots/signupr.png" alt="Register Page" /></td>
+    <td>Register Page<br><img src="./screenshots/signup.png" alt="Register Page" /></td>
      <td>Login Page<br><img src="./screenshots/login.png" alt="Login Page" /></td>
     </tr>
    <tr>
